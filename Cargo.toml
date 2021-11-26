@@ -1,0 +1,13 @@
+[package]
+name = "stm32f3_Gyroscope"
+version = "0.1.0"
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+cortex-m = "0.6.3"
+cortex-m-rt = "0.6.3"
+panic-itm = "0.4.0"
+stm32f3-discovery = "0.6.0"
+l3gd20 = "0.3.0"
