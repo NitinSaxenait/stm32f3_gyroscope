@@ -9,11 +9,7 @@ pub use stm32f3_discovery::{
 };
 
 use l3gd20::{L3gd20, Measurements};
-use stm32f3_discovery::stm32f3xx_hal::{
-    prelude::*,
-    spi::Spi,
-    stm32,
-};
+use stm32f3_discovery::stm32f3xx_hal::{prelude::*, spi::Spi, stm32};
 
 /// This program is going to provide the initialization to get and print the sensor readings with
 /// some delay.
@@ -51,8 +47,18 @@ pub fn initialization() -> (Delay, ITM, Measurements) {
         clocks,
         &mut rcc.apb2,
     );
-    let mut l3 = L3gd20::new(spi, led).unwrap();
-    let gyro_readings = l3.all().unwrap();
+    let mut l3 = match L3gd20::new(spi, led) {
+        Ok(l3) => l3,
+        Err(error) => {
+            panic!("Can't connect to the L3gd20 {:?}", error)
+        }
+    };
+    let gyro_readings = match l3.all() {
+        Ok(readings) => readings,
+        Err(error) => {
+            panic!("Cant get the gyro measurements {:?}", error)
+        }
+    };
     let delay = Delay::new(core_peripherals.SYST, clocks);
 
     (delay, core_peripherals.ITM, gyro_readings)
